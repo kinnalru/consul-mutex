@@ -385,7 +385,13 @@ class Consul::Mutex
 
 	def consul_connection
 		begin
-			Net::HTTP.start(@consul_url.host, @consul_url.port, :use_ssl => @consul_url.scheme == 'https') do |http|
+			Net::HTTP.start(
+			  @consul_url.host,
+			  @consul_url.port,
+			  :use_ssl      => @consul_url.scheme == 'https',
+			  :read_timeout => 86400,
+			  :ssl_timeout  => 86400
+			) do |http|
 				yield http
 			end
 		rescue Timeout::Error
